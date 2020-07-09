@@ -12,6 +12,7 @@ namespace BGMS_Repository.DTO
     public class GameDTO
     {
         public int Id { get; set; }
+
         [DisplayName("Game name")]
         [StringLength(100)]
         [Required]
@@ -19,12 +20,12 @@ namespace BGMS_Repository.DTO
 
         [DisplayName("Min players")]
         [Range(1, int.MaxValue)]
+        [NumericLessThan("MaxPlayersNum", AllowEquality = true)]
         [Required]
         public int MinPlayersNum { get; set; }
 
         [DisplayName("Max players")]
         [Range(1, int.MaxValue)]
-        [GreaterThan("MinPlayersNum")]
         [Required]
         public int MaxPlayersNum { get; set; }
 
@@ -61,7 +62,6 @@ namespace BGMS_Repository.DTO
         public string DisplaySource { get; set; }
 
         [DisplayName("Display time")]
-
         public string DisplayTimeFormatted
         {
             get
@@ -69,6 +69,7 @@ namespace BGMS_Repository.DTO
                 return this.DisplayTime.ToShortTimeString();
             }
         }
+
         [DisplayName("Display date")]
         public string DisplayDateFormatted
         {

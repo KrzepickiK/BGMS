@@ -62,10 +62,15 @@ namespace BGMS.Controllers
 
         // POST: Game/Create
         [HttpPost]
-        public async Task<ActionResult> Create(GameDTO newGame)
+        public async Task<ActionResult> Create([Bind(Exclude = "Id")] GameDTO newGame)
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return View(newGame);
+                }
+
                 await _gameS.AddNewGame(newGame);
                 return RedirectToAction("Index");
             }
@@ -96,6 +101,11 @@ namespace BGMS.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return View(editedGame);
+                }
+
                 await _gameS.UpdateGameDataAsync(editedGame);
                 return RedirectToAction("Index");
             }

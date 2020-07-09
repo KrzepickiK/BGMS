@@ -1,61 +1,108 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Web;
+using System.Web.Mvc;
 
 namespace BGMS_Repository.Helpers
 {
-    public class GreaterThanAttribute : ValidationAttribute
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    public sealed class NumericLessThanAttribute : ValidationAttribute, IClientValidatable
     {
-        public GreaterThanAttribute(string otherProperty)
-            : base("{0} must be greater than {1}")
+        private const string lessThanErrorMessage = "{0} must be less than {1}.";
+        private const string lessThanOrEqualToErrorMessage = "{0} must be less than or equal to {1}.";
+
+        public string OtherProperty { get; private set; }
+        private bool allowEquality;
+        public bool AllowEquality
         {
-            OtherProperty = otherProperty;
-        }
-
-        public string OtherProperty { get; set; }
-
-        public string FormatErrorMessage(string name, string otherName)
-        {
-            return string.Format(ErrorMessageString, name, otherName);
-        }
-
-        protected override ValidationResult
-            IsValid(object firstValue, ValidationContext validationContext)
-        {
-            var firstComparable = firstValue as IComparable;
-            var secondComparable = GetSecondComparable(validationContext);
-
-            if (firstComparable != null && secondComparable != null)
+            get { return this.allowEquality; }
+            set
             {
-                if (firstComparable.CompareTo(secondComparable) < 1)
-                {
-                    object obj = validationContext.ObjectInstance;
-                    var thing = obj.GetType().GetProperty(OtherProperty);
-                    var displayName = (DisplayAttribute)Attribute.GetCustomAttribute(thing, typeof(DisplayAttribute));
+                this.allowEquality = value;
+                this.ErrorMessage = (value ? lessThanOrEqualToErrorMessage : lessThanErrorMessage);
+            }
+        }
 
-                    return new ValidationResult(
-                        FormatErrorMessage(validationContext.DisplayName, displayName.GetName()));
-                }
+        public NumericLessThanAttribute(string otherProperty)
+            : base(lessThanErrorMessage)
+        {
+            if (otherProperty == null) { throw new ArgumentNullException("otherProperty"); }
+            this.OtherProperty = otherProperty;
+        }
+
+        public override string FormatErrorMessage(string name)
+        {
+            return String.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, this.OtherProperty);
+        }
+
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            PropertyInfo otherPropertyInfo = validationContext.ObjectType.GetProperty(OtherProperty);
+
+            if (otherPropertyInfo == null)
+            {
+                return new ValidationResult(String.Format(CultureInfo.CurrentCulture, "Could not find a property named {0}.", OtherProperty));
+            }
+
+            object otherPropertyValue = otherPropertyInfo.GetValue(validationContext.ObjectInstance, null);
+
+            decimal decValue;
+            decimal decOtherPropertyValue;
+
+            // Check to ensure the validating property is numeric
+            if (!decimal.TryParse(value.ToString(), out decValue))
+            {
+                return new ValidationResult(String.Format(CultureInfo.CurrentCulture, "{0} is not a numeric value.", validationContext.DisplayName));
+            }
+
+            // Check to ensure the other property is numeric
+            if (!decimal.TryParse(otherPropertyValue.ToString(), out decOtherPropertyValue))
+            {
+                return new ValidationResult(String.Format(CultureInfo.CurrentCulture, "{0} is not a numeric value.", OtherProperty));
+            }
+
+            // Check for equality
+            if (AllowEquality && decValue == decOtherPropertyValue)
+            {
+                return ValidationResult.Success;
+            }
+
+            // Check to see if the value is greater than the other property value
+            else if (decValue > decOtherPropertyValue)
+            {
+                return new ValidationResult(FormatErrorMessage(validationContext.DisplayName));
             }
 
             return ValidationResult.Success;
         }
 
-        protected IComparable GetSecondComparable(
-            ValidationContext validationContext)
+        public static string FormatPropertyForClientValidation(string property)
         {
-            var propertyInfo = validationContext
-                                  .ObjectType
-                                  .GetProperty(OtherProperty);
-            if (propertyInfo != null)
+            if (property == null)
             {
-                var secondValue = propertyInfo.GetValue(
-                    validationContext.ObjectInstance, null);
-                return secondValue as IComparable;
+                throw new ArgumentException("Value cannot be null or empty.", "property");
             }
-            return null;
+            return "*." + property;
+        }
+
+        public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
+        {
+            yield return new ModelClientValidationNumericLessThanRule(FormatErrorMessage(metadata.DisplayName), FormatPropertyForClientValidation(this.OtherProperty), this.AllowEquality);
+        }
+    }
+
+    public class ModelClientValidationNumericLessThanRule : ModelClientValidationRule
+    {
+        public ModelClientValidationNumericLessThanRule(string errorMessage, object other, bool allowEquality)
+        {
+            ErrorMessage = errorMessage;
+            ValidationType = "numericlessthan";
+            ValidationParameters["other"] = other;
+            ValidationParameters["allowequality"] = allowEquality;
         }
     }
 }
