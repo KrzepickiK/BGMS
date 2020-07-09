@@ -46,10 +46,10 @@ namespace BGMS.Controllers
             {
                 return HttpNotFound();
             }
-
             ViewBag.Title = gameDto.Name;
-            //Task.Run(() => _statS.RegisterGameDetailsVisitAsync(id ?? 0, "www application"));
+
             await _statS.RegisterGameDetailsVisitAsync(id ?? 0, "www application");
+
             return View(gameDto);
         }
 

@@ -28,7 +28,12 @@ namespace BGMS.Controllers.API
             this._statS = statS;
         }
 
-        // GET: api/GetGames
+        // GET: api/Game/List/10
+        /// <summary>
+        /// Get games list with optional limit parameter
+        /// </summary>
+        /// <param name="limit">Maximum number of records to be returned (OPTIONAL)</param>
+        /// <returns>Returns list of games limited by optional parameter (if param not set returns all data from database)</returns>
         [HttpGet]
         [Route("api/game/list/{limit:int?}")]
         public async Task<GameListDTO> GetGames(int? limit = null)
@@ -36,7 +41,12 @@ namespace BGMS.Controllers.API
             return await _gameS.GetGamesListAsync(limit);
         }
 
-        // GET: api/Game/5
+        // GET: api/Game/Details/5
+        /// <summary>
+        /// Get game data by Id
+        /// </summary>
+        /// <param name="id">The Id of the game</param>
+        /// <returns>Returns detailed information about selected game</returns>
         [HttpGet]
         [Route("api/game/details/{id}")]
         [ResponseType(typeof(GameDetailsDTO))]
@@ -54,7 +64,8 @@ namespace BGMS.Controllers.API
                 return NotFound();
             }
 
-            Task.Run(() => _statS.RegisterGameDetailsVisitAsync(id ?? 0, "webservice"));
+            await _statS.RegisterGameDetailsVisitAsync(id ?? 0, "webservice");
+
             return Ok(gameDto);
         }
     }

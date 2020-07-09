@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BGMS_Repository.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -12,15 +13,23 @@ namespace BGMS_Repository.DTO
     {
         public int Id { get; set; }
         [DisplayName("Game name")]
+        [StringLength(100)]
         [Required]
         public string Name { get; set; }
+
         [DisplayName("Min players")]
+        [Range(1, int.MaxValue)]
         [Required]
         public int MinPlayersNum { get; set; }
+
         [DisplayName("Max players")]
+        [Range(1, int.MaxValue)]
+        [GreaterThan("MinPlayersNum")]
         [Required]
         public int MaxPlayersNum { get; set; }
+
         [DisplayName("Minimal recommended player age")]
+        [Range(0, 99)]
         [Required]
         public int MinimalPlayerAge { get; set; }
     }

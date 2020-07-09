@@ -39,7 +39,7 @@ namespace BGMS_Service.Services
 
             if (limit.HasValue)
             {
-                dbGames = dbGames.Take(limit.Value);
+                dbGames = dbGames.Take(limit.Value > 0 ? limit.Value : 0);
             }
 
             GameListDTO gamesList = new GameListDTO

@@ -56,6 +56,7 @@
     <Compile Include="AutoMapperConfig\AutoMapperProfile.cs" />
     <Compile Include="DAL\AppDbContext.cs" />
     <Compile Include="DTO\GameDTO.cs" />
+    <Compile Include="Helpers\CustomAttributes.cs" />
     <Compile Include="Migrations\202007071308271_Init.cs" />
     <Compile Include="Migrations\202007071308271_Init.designer.cs">
       <DependentUpon>202007071308271_Init.cs</DependentUpon>
