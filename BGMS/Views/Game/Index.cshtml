@@ -1,0 +1,26 @@
+﻿@model BGMS_Repository.DTO.GameListDTO
+
+        <h1>@ViewBag.Title</h1>
+        <div class="subpage-controls">
+            <a href="@Url.Action("Create", "Game")" class="btn btn-info">Add new game</a>
+        </div>
+        <div class="subpage-content table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(m=>m.Games.FirstOrDefault().Name)</th>
+                    </tr>
+                </thead>
+                @foreach (var game in Model.Games)
+                {
+                    <tr>
+                        <td>@game.Name</td>
+                        <td class="text-right">
+                            <a href="@Url.Action("Edit", "Game", new { id = game.Id })" class="btn btn-warning">Edit</a>
+                            <a href="@Url.Action("Delete", "Game", new { id = game.Id })" class="btn btn-danger">Delete</a>
+                            <a href="@Url.Action("Details", "Game", new { id = game.Id })" class="btn btn-primary">Show details</a>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>

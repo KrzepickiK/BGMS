@@ -1,0 +1,14 @@
+﻿@model BGMS_Repository.DTO.GameDTO
+
+<h1>Add new game to the list</h1>
+@using (Html.BeginForm(FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.EditorForModel()
+    <button class="btn btn-success">Add game</button>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

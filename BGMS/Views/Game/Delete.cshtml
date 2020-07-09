@@ -1,0 +1,18 @@
+﻿@model BGMS_Repository.DTO.GameDetailsDTO
+
+<h1 class="text-danger">Are you sure you want to permanently delete the selected game from database?</h1>
+
+<h2>@Html.DisplayNameFor(m => m.Name): @Model.Name</h2>
+<ul>
+    <li>@Html.DisplayNameFor(m => m.MinimalPlayerAge): @Model.MinimalPlayerAge</li>
+    <li>@Html.DisplayNameFor(m => m.MinPlayersNum): @Model.MinPlayersNum</li>
+    <li>@Html.DisplayNameFor(m => m.MaxPlayersNum): @Model.MaxPlayersNum</li>
+</ul>
+
+@using (Html.BeginForm(FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m=>m.Id)
+    <a href="@Url.Action("Index", "Game")" class="btn btn-info">Back to the list</a>
+    <button type="submit" class="btn btn-danger">Delete!</button>
+}

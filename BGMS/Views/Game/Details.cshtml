@@ -1,0 +1,31 @@
+﻿@model BGMS_Repository.DTO.GameDetailsDTO
+<h1>Game details</h1>
+<h2>@Html.DisplayNameFor(m => m.Name): @Model.Name</h2>
+
+<ul>
+    <li><b>@Html.DisplayNameFor(m => m.MinimalPlayerAge):</b> @Model.MinimalPlayerAge</li>
+    <li><b>@Html.DisplayNameFor(m => m.MinPlayersNum):</b> @Model.MinPlayersNum</li>
+    <li><b>@Html.DisplayNameFor(m => m.MaxPlayersNum):</b> @Model.MaxPlayersNum</li>
+</ul>
+<div class="subpage-content table-responsive">
+    <h2>@Html.DisplayNameFor(m => m.LastDisplays)</h2>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.LastDisplays.FirstOrDefault().DisplayDateFormatted)</th>
+                <th>@Html.DisplayNameFor(m => m.LastDisplays.FirstOrDefault().DisplayTimeFormatted)</th>
+                <th>@Html.DisplayNameFor(m => m.LastDisplays.FirstOrDefault().DisplaySource)</th>
+            </tr>
+        </thead>
+       <tbody>
+            @foreach (var row in Model.LastDisplays)
+            {
+                <tr>
+                    <td>@row.DisplayDateFormatted</td>
+                    <td>@row.DisplayTimeFormatted</td>
+                    <td>@row.DisplaySource</td>
+                </tr>
+            }
+       </tbody>
+    </table>
+</div>

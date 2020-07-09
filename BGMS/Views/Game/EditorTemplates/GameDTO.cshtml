@@ -1,0 +1,23 @@
+﻿@model BGMS_Repository.DTO.GameDTO
+
+    @Html.HiddenFor(m=>m.Id)
+    <div class="form-group">
+        <label>@Html.LabelFor(m => m.Name)</label>
+        @Html.EditorFor(m => m.Name, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        <label>@Html.LabelFor(m => m.MinPlayersNum)</label>
+        @Html.EditorFor(m => m.MinPlayersNum, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(m => m.MinPlayersNum, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        <label>@Html.LabelFor(m => m.MaxPlayersNum)</label>
+        @Html.EditorFor(m => m.MaxPlayersNum, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(m => m.MaxPlayersNum, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        <label>@Html.LabelFor(m => m.MinimalPlayerAge)</label>
+        @Html.EditorFor(m => m.MinimalPlayerAge, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(m => m.MinimalPlayerAge, "", new { @class = "text-danger" })
+    </div>
