@@ -5,7 +5,8 @@
 {
     @Html.AntiForgeryToken()
     @Html.EditorForModel()
-    <button class="btn btn-success">Add game</button>
+    <a href="@Url.Action("Index", "Game")" class="btn btn-info">Back to the list</a>
+    <button type="submit" class="btn btn-success">Add game</button>
 }
 
 @section Scripts {

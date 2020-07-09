@@ -7,6 +7,14 @@
     <li><b>@Html.DisplayNameFor(m => m.MinPlayersNum):</b> @Model.MinPlayersNum</li>
     <li><b>@Html.DisplayNameFor(m => m.MaxPlayersNum):</b> @Model.MaxPlayersNum</li>
 </ul>
+
+
+<div class="subpage-controls">
+    <a href="@Url.Action("Index", "Game")" class="btn btn-info">Back to the list</a>
+    <a href="@Url.Action("Edit", "Game", new { id = Model.Id })" class="btn btn-warning">Edit</a>
+    <a href="@Url.Action("Delete", "Game", new { id = Model.Id })" class="btn btn-danger">Delete</a>
+
+</div>
 <div class="subpage-content table-responsive">
     <h2>@Html.DisplayNameFor(m => m.LastDisplays)</h2>
     <table class="table table-hover">

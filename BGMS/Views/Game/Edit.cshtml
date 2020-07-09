@@ -5,6 +5,7 @@
 {
     @Html.AntiForgeryToken()
     @Html.EditorForModel()
+    <a href="@Url.Action("Index", "Game")" class="btn btn-info">Back to the list</a>
     <button type="submit" class="btn btn-success">Save changes</button>
 }
 
